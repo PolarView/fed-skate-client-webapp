@@ -1,6 +1,8 @@
-import { columns } from "./columns";
-import { DataTable } from "./data-table";
+"use client";
+import { columns } from "../../components/columns";
+import { DataTable } from "../../components/data-table";
 import { google } from "googleapis";
+import { usePathname } from "next/navigation";
 
 async function getData() {
   // Fetch data from your API here.
@@ -30,7 +32,7 @@ async function getData() {
   const getRows = await googleSheets.spreadsheets.values.get({
     auth,
     spreadsheetId,
-    range: "Sheet1"
+    range: "Park"
   });
 
   let isWomens = false;
@@ -81,11 +83,12 @@ async function getData() {
 }
 
 export default async function DemoPage() {
+  const competitionCategory = usePathname();
   const data = await getData();
 
   return (
     <div className="container w-screen h-screen">
-      <DataTable columns={columns} data={data} />
+      <DataTable columns={columns(competitionCategory)} data={data} />
     </div>
   );
 }

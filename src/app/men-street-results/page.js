@@ -32,7 +32,7 @@ async function getData() {
   const getRows = await googleSheets.spreadsheets.values.get({
     auth,
     spreadsheetId,
-    range: "Park"
+    range: "Street"
   });
 
   let isWomens = false;
@@ -42,7 +42,7 @@ async function getData() {
         isWomens = true;
       }
 
-      if (!isWomens && Number(item[0])) return true;
+      if (isWomens && Number(item[0])) return true;
     })
     .map((item) => {
       return {
@@ -83,14 +83,9 @@ async function getData() {
   //   ];
 }
 
-export const getServerSideProps = async () => {
-  const data = await getData();
-
-  return { props: { data } };
-};
-
-export default async function DemoPage({ data }) {
+export default async function DemoPage() {
   const competitionCategory = usePathname();
+  const data = await getData();
 
   return (
     <div className="container w-screen h-screen">
